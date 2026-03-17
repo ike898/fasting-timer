@@ -15,9 +15,7 @@ dependencies:
   # State management
   flutter_riverpod: ^2.6.1
 
-  # Local DB
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  # Persistence
   path_provider: ^2.1.5
 
   # Timer & notifications
@@ -40,8 +38,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  isar_generator: ^3.1.0+1
-  build_runner: ^2.4.12
 
 flutter:
   uses-material-design: true
