@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/timer_screen.dart';
 import 'screens/history_screen.dart';
+import 'screens/stats_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: FastingTimerApp()));
@@ -47,6 +49,8 @@ class _MainShellState extends State<MainShell> {
   final _screens = const [
     TimerScreen(),
     HistoryScreen(),
+    StatsScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -69,6 +73,16 @@ class _MainShellState extends State<MainShell> {
             icon: Icon(Icons.history_outlined),
             selectedIcon: Icon(Icons.history),
             label: 'History',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart),
+            label: 'Stats',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
