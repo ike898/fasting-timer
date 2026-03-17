@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../providers/fasting_provider.dart';
 import '../models/fast_record.dart';
+import '../widgets/banner_ad_widget.dart';
 
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
@@ -13,7 +14,10 @@ class StatsScreen extends ConsumerWidget {
     final streak = ref.watch(currentStreakProvider);
     final theme = Theme.of(context);
 
-    return historyAsync.when(
+    return Column(
+      children: [
+        Expanded(
+          child: historyAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (records) {
@@ -159,6 +163,10 @@ class StatsScreen extends ConsumerWidget {
           ),
         );
       },
+    ),
+        ),
+        const BannerAdWidget(),
+      ],
     );
   }
 
