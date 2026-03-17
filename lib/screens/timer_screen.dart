@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/fast_record.dart';
 import '../providers/fasting_provider.dart';
 import '../widgets/progress_ring.dart';
+import '../services/interstitial_ad_service.dart';
 
 class TimerScreen extends ConsumerStatefulWidget {
   const TimerScreen({super.key});
@@ -37,6 +38,7 @@ class _TimerScreenState extends ConsumerState<TimerScreen> {
 
   void _endFast() async {
     await ref.read(activeFastProvider.notifier).endFast();
+    InterstitialAdService.showIfReady();
   }
 
   @override

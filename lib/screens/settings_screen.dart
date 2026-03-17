@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/purchase_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final isPremium = ref.watch(isPremiumProvider);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -37,9 +40,25 @@ class SettingsScreen extends StatelessWidget {
         // Premium section
         Text('Premium', style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
+        if (isPremium)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.verified, color: Colors.green, size: 32),
+                  const SizedBox(width: 16),
+                  Text('Premium Active',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                          color: Colors.green)),
+                ],
+              ),
+            ),
+          )
+        else
         Card(
           child: InkWell(
-            onTap: () => _showPremiumSheet(context),
+            onTap: () => _showPremiumSheet(context, ref),
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -125,7 +144,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showPremiumSheet(BuildContext context) {
+  void _showPremiumSheet(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
@@ -144,7 +163,10 @@ class SettingsScreen extends StatelessWidget {
             const _PremiumFeature(text: 'CSV export'),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () => Navigator.pop(ctx),
+              onPressed: () {
+                Navigator.pop(ctx);
+                ref.read(purchaseServiceProvider).buyPremium();
+              },
               style: FilledButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
@@ -155,7 +177,9 @@ class SettingsScreen extends StatelessWidget {
                 style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant)),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                ref.read(purchaseServiceProvider).restorePurchases();
+              },
               child: const Text('Restore Purchase'),
             ),
           ],
