@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/fast_record.dart';
+import '../services/notification_service.dart';
 
 int _counter = 0;
 String _generateId() =>
@@ -27,13 +28,18 @@ class ActiveFastNotifier extends StateNotifier<FastRecord?> {
   }
 
   Future<void> startFast(int targetHours) async {
+    final now = DateTime.now();
     final record = FastRecord(
       id: _generateId(),
-      startTime: DateTime.now(),
+      startTime: now,
       targetHours: targetHours,
     );
     state = record;
     await _ref.read(fastHistoryProvider.notifier).add(record);
+    await NotificationService.scheduleFastComplete(
+      completionTime: now.add(Duration(hours: targetHours)),
+      targetHours: targetHours,
+    );
   }
 
   Future<void> endFast({String? note}) async {
@@ -46,6 +52,7 @@ class ActiveFastNotifier extends StateNotifier<FastRecord?> {
       wasCompleted: completed,
     );
     state = null;
+    await NotificationService.cancelAll();
     await _ref.read(fastHistoryProvider.notifier).updateRecord(ended);
   }
 }
